@@ -1,8 +1,7 @@
 #root {
   width: 100vw;
   height: 100vh;
-  background-color: black;
-  /* background-image: linear-gradient(0deg, #d87e6200 0%, #b0ff1de1 100%); */
+  background: radial-gradient(#5a47ce, #232323 80%);
 }
 body {
   -ms-overflow-style: none;

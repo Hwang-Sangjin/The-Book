@@ -1,4 +1,6 @@
 import { useHelper } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { easing } from "maath";
 import { useMemo, useRef } from "react";
 import {
   Bone,
@@ -12,11 +14,17 @@ import {
   Uint16BufferAttribute,
   Vector3,
 } from "three";
+import { degToRad, MathUtils } from "three/src/math/MathUtils.js";
 
 const PAGE_WIDTH = 1.28;
 const PAGE_HEIGHT = 1.71; // 4:3 aspect ratio
 const PAGE_DEPTH = 0.003;
 const PAGE_SEGMENTS = 30;
+const easingFactor = 0.5;
+const insideCurveStrength = 0.17;
+const outsideCurveStrength = 0.03;
+const turningCurveStrength = 0.09;
+const easingFactorFold = 0.3;
 const SEGMENT_WIDTH = PAGE_WIDTH / PAGE_SEGMENTS;
 
 const pageGeometry = new BoxGeometry(
@@ -71,8 +79,10 @@ const pageMaterials = [
   }),
 ];
 
-const Page = ({ data }) => {
+const Page = ({ data, page, number, opened, bookClosed }) => {
   const group = useRef();
+  const turnedAt = useRef(0);
+  const lastOpened = useRef(opened);
 
   const skinnedMeshRef = useRef();
 
@@ -95,7 +105,15 @@ const Page = ({ data }) => {
 
     const skeleton = new Skeleton(bones);
 
-    const materials = pageMaterials;
+    const materials = [
+      ...pageMaterials,
+      new MeshStandardMaterial({
+        color: whiteColor,
+      }),
+      new MeshStandardMaterial({
+        color: whiteColor,
+      }),
+    ];
     const mesh = new SkinnedMesh(pageGeometry, materials);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -105,11 +123,77 @@ const Page = ({ data }) => {
     return mesh;
   }, []);
 
-  useHelper(skinnedMeshRef, SkeletonHelper, "red");
+  useFrame((_, delta) => {
+    if (!skinnedMeshRef.current) return;
+
+    if (lastOpened.current !== opened) {
+      turnedAt.current = +new Date();
+      lastOpened.current = opened;
+    }
+    let turningTime = Math.min(400, new Date() - turnedAt.current) / 400;
+    turningTime = Math.sin(turningTime * Math.PI);
+
+    let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2;
+    if (!bookClosed) {
+      targetRotation += degToRad(number * 0.1);
+    }
+
+    const bones = skinnedMeshRef.current.skeleton.bones;
+
+    for (let i = 0; i < bones.length; i++) {
+      const target = i === 0 ? group.current : bones[i];
+
+      const insideCurveIntensity = i < 7 ? Math.sin(i * 0.2 + 0.25) : 0;
+      const outsideCurveIntensity = i >= 7 ? Math.cos(i * 0.3 + 0.09) : 0;
+      const turningIntensity =
+        Math.sin(i * Math.PI * (1 / bones.length)) * turningTime;
+      let rotationAngle =
+        insideCurveIntensity * insideCurveStrength * targetRotation -
+        outsideCurveIntensity * outsideCurveStrength * targetRotation +
+        turningIntensity * turningCurveStrength * targetRotation;
+
+      let foldRotationAngle = degToRad(Math.sign(targetRotation) * 2);
+
+      if (bookClosed) {
+        if (i === 0) {
+          rotationAngle = targetRotation;
+          foldRotationAngle = 0;
+        } else {
+          rotationAngle = 0;
+        }
+      }
+
+      easing.dampAngle(
+        target.rotation,
+        "y",
+        rotationAngle,
+        easingFactor,
+        delta
+      );
+
+      const foldIntensity =
+        i > 8
+          ? Math.sin(i * Math.PI * (1 / bones.length) - 0.5) * turningTime
+          : 0;
+      easing.dampAngle(
+        target.rotation,
+        "x",
+        foldRotationAngle * foldIntensity,
+        easingFactorFold,
+        delta
+      );
+    }
+  }, []);
+
+  //useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   return (
     <group ref={group}>
-      <primitive object={manualSkinnedMesh} ref={skinnedMeshRef} />
+      <primitive
+        position-z={-number * PAGE_DEPTH + page * PAGE_DEPTH}
+        object={manualSkinnedMesh}
+        ref={skinnedMeshRef}
+      />
     </group>
   );
 };
