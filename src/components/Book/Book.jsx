@@ -4,10 +4,18 @@ import Page from "./Page";
 import { useRecoilState } from "recoil";
 import pageState from "../../recoil/pageState";
 import { useEffect, useState } from "react";
+import pageImage from "&/page.png";
+import { useTexture } from "@react-three/drei";
+import * as THREE from "three";
 
 const Book = ({ ...props }) => {
   const [page] = useRecoilState(pageState);
   const [delayedPage, setDelayedPage] = useState(page);
+
+  const pageTexture = useTexture(pageImage);
+  pageTexture.colorSpace = THREE.SRGBColorSpace;
+  pageTexture.minFilter = THREE.LinearFilter;
+  pageTexture.magFilter = THREE.NearestFilter;
 
   useEffect(() => {
     let timeout;
@@ -38,7 +46,7 @@ const Book = ({ ...props }) => {
   }, [page]);
 
   return (
-    <group {...props} rotation-y={-Math.PI / 2}>
+    <group scale={1.5} {...props} rotation-y={-Math.PI / 2}>
       {bookSource.map((data, index) => {
         return (
           <Page
@@ -48,6 +56,7 @@ const Book = ({ ...props }) => {
             number={index}
             bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
             data={data}
+            pageTexture={pageTexture}
           />
         );
       })}

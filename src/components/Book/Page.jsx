@@ -79,7 +79,7 @@ const pageMaterials = [
   }),
 ];
 
-const Page = ({ data, page, number, opened, bookClosed }) => {
+const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
   const group = useRef();
   const turnedAt = useRef(0);
   const lastOpened = useRef(opened);
@@ -109,9 +109,11 @@ const Page = ({ data, page, number, opened, bookClosed }) => {
       ...pageMaterials,
       new MeshStandardMaterial({
         color: whiteColor,
+        map: pageTexture,
       }),
       new MeshStandardMaterial({
         color: whiteColor,
+        map: pageTexture,
       }),
     ];
     const mesh = new SkinnedMesh(pageGeometry, materials);
