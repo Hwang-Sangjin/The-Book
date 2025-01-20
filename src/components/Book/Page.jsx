@@ -61,9 +61,7 @@ pageGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
-const whiteColor = new Color("white");
-const emissiveColor = new Color("orange");
-
+const whiteColor = new Color("orange");
 const pageMaterials = [
   new MeshStandardMaterial({
     color: whiteColor,
@@ -190,13 +188,15 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
   //useHelper(skinnedMeshRef, SkeletonHelper, "red");
 
   return (
-    <group ref={group}>
-      <primitive
-        position-z={-number * PAGE_DEPTH + page * PAGE_DEPTH}
-        object={manualSkinnedMesh}
-        ref={skinnedMeshRef}
-      />
-    </group>
+    <>
+      <group ref={group}>
+        <primitive
+          position-z={-number * PAGE_DEPTH + page * PAGE_DEPTH}
+          object={manualSkinnedMesh}
+          ref={skinnedMeshRef}
+        />
+      </group>
+    </>
   );
 };
 
