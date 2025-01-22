@@ -9,6 +9,7 @@ import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import FrontCover from "./FrontCover";
 import BackCover from "./BackCover";
+import Cover from "./Cover";
 
 const Book = ({ ...props }) => {
   const [page] = useRecoilState(pageState);
@@ -49,7 +50,18 @@ const Book = ({ ...props }) => {
 
   return (
     <group scale={1.5} {...props} rotation-y={-Math.PI / 2}>
-      <FrontCover page={delayedPage} opened={page !== 0} />
+      <FrontCover
+        page={delayedPage}
+        number={0}
+        opened={page !== 0}
+        bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
+      />
+      <BackCover
+        page={delayedPage}
+        number={100}
+        opened={page !== 0}
+        bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
+      />
       {bookSource.map((data, index) => {
         return (
           <Page
@@ -63,12 +75,6 @@ const Book = ({ ...props }) => {
           />
         );
       })}
-      <BackCover
-        page={delayedPage}
-        bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
-        opened={delayedPage > 100}
-        number={100}
-      />
     </group>
   );
 };

@@ -191,7 +191,7 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
     <>
       <group ref={group}>
         <primitive
-          position-z={(page - number) * 0.003}
+          position-z={-number * PAGE_DEPTH + page * PAGE_DEPTH}
           object={manualSkinnedMesh}
           ref={skinnedMeshRef}
         />

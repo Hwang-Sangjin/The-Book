@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber";
+import { easing } from "maath";
 import { useMemo, useRef } from "react";
 import {
   Bone,
@@ -12,12 +13,18 @@ import {
   Uint16BufferAttribute,
   Vector3,
 } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 const PAGE_WIDTH = 1.3;
 const PAGE_HEIGHT = 1.8; // 4:3 aspect ratio
 const PAGE_DEPTH = 0.05;
 const PAGE_SEGMENTS = 30;
 const SEGMENT_WIDTH = PAGE_WIDTH / PAGE_SEGMENTS;
+const easingFactor = 0.5;
+const insideCurveStrength = 0.17;
+const outsideCurveStrength = 0.03;
+const turningCurveStrength = 0.09;
+const easingFactorFold = 0.3;
 
 const lerpFactor = 0.014;
 const lerpFactorOpen = 0.023;
@@ -71,7 +78,7 @@ coverGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
-const FrontCover = ({ page, opened }) => {
+const FrontCover = ({ page, opened, number, bookClosed }) => {
   const group = useRef();
   const turnedAt = useRef(0);
   const skinnedMeshRef = useRef();
@@ -129,7 +136,7 @@ const FrontCover = ({ page, opened }) => {
   return (
     <group ref={group}>
       <primitive
-        position-z={page * 0.003}
+        position-z={(page - number) * 0.003}
         object={manualSkinnedMesh}
         ref={skinnedMeshRef}
       />

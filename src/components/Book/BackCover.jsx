@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber";
+import { easing } from "maath";
 import { useMemo, useRef } from "react";
 import {
   Bone,
@@ -12,17 +13,23 @@ import {
   Uint16BufferAttribute,
   Vector3,
 } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 const PAGE_WIDTH = 1.3;
 const PAGE_HEIGHT = 1.8; // 4:3 aspect ratio
 const PAGE_DEPTH = 0.05;
 const PAGE_SEGMENTS = 30;
 const SEGMENT_WIDTH = PAGE_WIDTH / PAGE_SEGMENTS;
+const easingFactor = 0.5;
+const insideCurveStrength = 0.17;
+const outsideCurveStrength = 0.03;
+const turningCurveStrength = 0.09;
+const easingFactorFold = 0.3;
 
 const lerpFactor = 0.014;
 const lerpFactorOpen = 0.023;
 
-const whiteColor = new Color("white");
+const whiteColor = new Color("black");
 const pageMaterials = [
   new MeshStandardMaterial({
     color: whiteColor,
@@ -71,7 +78,7 @@ coverGeometry.setAttribute(
   new Float32BufferAttribute(skinWeights, 4)
 );
 
-const FrontCover = ({ page, opened, number }) => {
+const BackCover = ({ page, opened, number, bookClosed }) => {
   const group = useRef();
   const turnedAt = useRef(0);
   const skinnedMeshRef = useRef();
@@ -116,7 +123,7 @@ const FrontCover = ({ page, opened, number }) => {
   useFrame(() => {
     if (!skinnedMeshRef.current) return;
 
-    let targetRotation = opened ? (-Math.PI * 29) / 70 : Math.PI / 2;
+    let targetRotation = opened ? Math.PI + (-Math.PI * 38) / 70 : Math.PI / 2;
 
     const bones = skinnedMeshRef.current.skeleton.bones;
     bones[0].rotation.y = MathUtils.lerp(
@@ -128,9 +135,13 @@ const FrontCover = ({ page, opened, number }) => {
 
   return (
     <group ref={group}>
-      <primitive object={manualSkinnedMesh} ref={skinnedMeshRef} />
+      <primitive
+        position-z={(page - number) * 0.003}
+        object={manualSkinnedMesh}
+        ref={skinnedMeshRef}
+      />
     </group>
   );
 };
 
-export default FrontCover;
+export default BackCover;
