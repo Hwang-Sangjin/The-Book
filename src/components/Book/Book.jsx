@@ -58,8 +58,8 @@ const Book = ({ ...props }) => {
       />
       <BackCover
         page={delayedPage}
+        opened={delayedPage > 100}
         number={100}
-        opened={page !== 0}
         bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
       />
       {bookSource.map((data, index) => {

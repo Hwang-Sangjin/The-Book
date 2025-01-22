@@ -82,6 +82,7 @@ const BackCover = ({ page, opened, number, bookClosed }) => {
   const group = useRef();
   const turnedAt = useRef(0);
   const skinnedMeshRef = useRef();
+  const lastOpened = useRef(opened);
 
   const manualSkinnedMesh = useMemo(() => {
     const bones = [];
@@ -120,18 +121,48 @@ const BackCover = ({ page, opened, number, bookClosed }) => {
     return mesh;
   }, []);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (!skinnedMeshRef.current) return;
 
-    let targetRotation = opened ? Math.PI + (-Math.PI * 38) / 70 : Math.PI / 2;
+    if (lastOpened.current !== opened) {
+      turnedAt.current = +new Date();
+      lastOpened.current = opened;
+    }
+    let turningTime = Math.min(400, new Date() - turnedAt.current) / 400;
+    turningTime = Math.sin(turningTime * Math.PI);
+
+    let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2;
+    if (!bookClosed) {
+      targetRotation += degToRad(number * 0.1);
+    }
 
     const bones = skinnedMeshRef.current.skeleton.bones;
-    bones[0].rotation.y = MathUtils.lerp(
-      bones[0].rotation.y,
-      targetRotation,
-      opened ? lerpFactorOpen : lerpFactor
-    );
-  });
+
+    const target = group.current;
+
+    const insideCurveIntensity = Math.sin(0.25);
+    const outsideCurveIntensity = Math.cos(0.09);
+    const turningIntensity = Math.sin(0) * turningTime;
+    let rotationAngle =
+      insideCurveIntensity * insideCurveStrength * targetRotation -
+      outsideCurveIntensity * outsideCurveStrength * targetRotation +
+      turningIntensity * turningCurveStrength * targetRotation;
+
+    let foldRotationAngle = degToRad(Math.sign(targetRotation) * 2);
+
+    if (bookClosed) {
+      rotationAngle = targetRotation;
+      foldRotationAngle = 0;
+    } else {
+      bones[0].rotation.y = MathUtils.lerp(
+        bones[0].rotation.y,
+        targetRotation,
+        opened ? lerpFactorOpen : lerpFactor
+      );
+    }
+
+    easing.dampAngle(target.rotation, "y", rotationAngle, easingFactor, delta);
+  }, []);
 
   return (
     <group ref={group}>
