@@ -133,7 +133,7 @@ const BackCover = ({ page, opened, number, bookClosed }) => {
 
     let targetRotation = opened ? -Math.PI / 2 : Math.PI / 2;
     if (!bookClosed) {
-      targetRotation += degToRad(number * 0.1);
+      targetRotation -= degToRad(number * 0.1);
     }
 
     const bones = skinnedMeshRef.current.skeleton.bones;
