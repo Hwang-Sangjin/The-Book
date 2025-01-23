@@ -28,9 +28,9 @@ const UI = () => {
   }, [audioState]);
 
   return (
-    <div className="absolute flex bottom-52 w-full justify-center">
+    <div className="absolute flex bottom-40 w-full justify-center">
       <button
-        className="m-auto font-Danjo text-gray-300 text-3xl"
+        className="m-auto font-Danjo text-gray-300 text-3xl bg-black p-5 rounded-3xl"
         onClick={changePage}
       >
         책님!
