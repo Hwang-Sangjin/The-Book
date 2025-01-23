@@ -1,4 +1,4 @@
-import { useHelper } from "@react-three/drei";
+import { Text, useHelper } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { useMemo, useRef } from "react";
@@ -194,7 +194,22 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
           position-z={(page - number) * 0.003}
           object={manualSkinnedMesh}
           ref={skinnedMeshRef}
-        />
+        >
+          <Text
+            visible={page === number ? true : false}
+            maxWidth={1}
+            color={"black"}
+            rotation={[0, Math.PI / 2 + (-Math.PI * 3) / 70, 0]}
+            fontSize={0.08}
+            position={[
+              0.003 * (100 - number) + 0.25,
+              0,
+              -0.5 + (page - number) * 0.003,
+            ]}
+          >
+            {data}
+          </Text>
+        </primitive>
       </group>
     </>
   );

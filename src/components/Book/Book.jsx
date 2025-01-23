@@ -48,6 +48,8 @@ const Book = ({ ...props }) => {
     };
   }, [page]);
 
+  console.log(bookSource[page]);
+
   return (
     <group scale={1.5} {...props} rotation-y={-Math.PI / 2}>
       <FrontCover
