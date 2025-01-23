@@ -203,7 +203,7 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
             rotation={[0, Math.PI / 2 + (-Math.PI * 3) / 70, 0]}
             fontSize={0.08}
             position={[
-              0.003 * (100 - number) + 0.27,
+              0.003 * (page - number) + 0.31,
               0.1,
               -0.5 + (page - number) * 0.003,
             ]}
