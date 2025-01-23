@@ -196,14 +196,15 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
           ref={skinnedMeshRef}
         >
           <Text
+            font="./Danjo-bold-Regular.otf"
             visible={page === number ? true : false}
-            maxWidth={1}
+            maxWidth={0.8}
             color={"black"}
             rotation={[0, Math.PI / 2 + (-Math.PI * 3) / 70, 0]}
             fontSize={0.08}
             position={[
-              0.003 * (100 - number) + 0.25,
-              0,
+              0.003 * (100 - number) + 0.27,
+              0.1,
               -0.5 + (page - number) * 0.003,
             ]}
           >

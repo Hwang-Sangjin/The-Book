@@ -3,6 +3,9 @@ export default {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
     extend: {},
+    fontFamily: {
+      Dokrip: ["Dokrip"],
+    },
   },
   plugins: [],
 };
