@@ -77,7 +77,15 @@ const pageMaterials = [
   }),
 ];
 
-const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
+const Page = ({
+  targetPage,
+  data,
+  page,
+  number,
+  opened,
+  bookClosed,
+  pageTexture,
+}) => {
   const group = useRef();
   const turnedAt = useRef(0);
   const lastOpened = useRef(opened);
@@ -196,8 +204,9 @@ const Page = ({ data, page, number, opened, bookClosed, pageTexture }) => {
           ref={skinnedMeshRef}
         >
           <Text
+            anchorX="center"
             font="./Danjo-bold-Regular.otf"
-            visible={page === number ? true : false}
+            visible={targetPage === number ? true : false}
             maxWidth={0.8}
             color={"black"}
             rotation={[0, Math.PI / 2 + (-Math.PI * 3) / 70, 0]}

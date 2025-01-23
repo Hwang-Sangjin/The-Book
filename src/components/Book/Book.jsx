@@ -14,11 +14,24 @@ import Cover from "./Cover";
 const Book = ({ ...props }) => {
   const [page] = useRecoilState(pageState);
   const [delayedPage, setDelayedPage] = useState(page);
+  const [answer, setAnswer] = useState(bookSource);
 
   const pageTexture = useTexture(pageImage);
   pageTexture.colorSpace = THREE.SRGBColorSpace;
   pageTexture.minFilter = THREE.LinearFilter;
   pageTexture.magFilter = THREE.NearestFilter;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  useEffect(() => {
+    setAnswer(shuffle(answer));
+  }, []);
 
   useEffect(() => {
     let timeout;
@@ -68,9 +81,10 @@ const Book = ({ ...props }) => {
         number={50}
         bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
       />
-      {bookSource.map((data, index) => {
+      {answer.map((data, index) => {
         return (
           <Page
+            targetPage={page}
             key={index}
             page={delayedPage}
             opened={delayedPage > index}
