@@ -11,12 +11,13 @@ const Cover = ({ page, opened, number, bookClosed }) => {
       coverRef.current.rotation.y = MathUtils.lerp(
         coverRef.current.rotation.y,
         0,
-        0.015
+        0.002 * page
       );
+
       coverRef.current.position.x = MathUtils.lerp(
         coverRef.current.position.x,
         0,
-        0.015
+        0.002 * page
       );
     } else {
       coverRef.current.position.x = MathUtils.lerp(
