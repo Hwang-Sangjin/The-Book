@@ -4,11 +4,13 @@ import bookSource from "../BookSource";
 import { useEffect, useRef, useState } from "react";
 import AudioSource from "../AudioSource";
 import openState from "../recoil/openState";
+import turnPageAudio from "../AudioSource/turnPages.wav";
 
 const UI = () => {
   const bookSrc = bookSource;
   const audioSrc = AudioSource;
   const audioRef = useRef();
+  const bookAudioRef = useRef();
   const [page, setPage] = useRecoilState(pageState);
   const [audioIndex, setAudioIndex] = useState(-1);
   const [audioState, setAudioState] = useState(true);
@@ -29,6 +31,9 @@ const UI = () => {
     if (audioIndex !== -1) {
       audioRef.current.play();
     }
+    if (turnPageAudio) {
+      bookAudioRef.current.play();
+    }
   }, [audioState]);
 
   return (
@@ -40,6 +45,7 @@ const UI = () => {
         책님!
       </button>
       <audio ref={audioRef} src={audioSrc[audioIndex]} />
+      <audio ref={bookAudioRef} src={turnPageAudio} />
     </div>
   );
 };
