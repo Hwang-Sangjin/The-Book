@@ -7,7 +7,7 @@ const Experience = () => {
   return (
     <Canvas>
       <ambientLight intensity={1} />
-      <Environment preset="studio"></Environment>
+      <Environment environmentIntensity={0.5} preset="studio"></Environment>
       <directionalLight
         position={[2, 5, 2]}
         intensity={0.1}
