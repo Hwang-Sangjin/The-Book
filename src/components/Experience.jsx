@@ -8,14 +8,14 @@ const Experience = () => {
     <Canvas>
       <ambientLight intensity={1} />
       <Environment preset="studio"></Environment>
-      {/* <directionalLight
+      <directionalLight
         position={[2, 5, 2]}
-        intensity={2.5}
+        intensity={0.1}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-bias={-0.0001}
-      /> */}
+      />
       <OrbitControls />
       <Book />
     </Canvas>

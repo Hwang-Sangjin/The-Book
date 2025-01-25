@@ -14,6 +14,9 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import backImage from "&/back.png";
+import * as THREE from "three";
+import { useTexture } from "@react-three/drei";
 
 const PAGE_WIDTH = 1.3;
 const PAGE_HEIGHT = 1.8; // 4:3 aspect ratio
@@ -29,19 +32,20 @@ const easingFactorFold = 0.3;
 const lerpFactor = 0.014;
 const lerpFactorOpen = 0.023;
 
-const whiteColor = new Color("black");
+const redColor = new Color("#74271a");
+const standardColor = new Color("#efcec1");
 const pageMaterials = [
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
   new MeshStandardMaterial({
     color: "#111",
   }),
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
 ];
 
@@ -84,6 +88,11 @@ const BackCover = ({ page, opened, number, bookClosed }) => {
   const skinnedMeshRef = useRef();
   const lastOpened = useRef(opened);
 
+  const BackCover = useTexture(backImage);
+  BackCover.colorSpace = THREE.SRGBColorSpace;
+  BackCover.minFilter = THREE.LinearFilter;
+  BackCover.magFilter = THREE.NearestFilter;
+
   const manualSkinnedMesh = useMemo(() => {
     const bones = [];
 
@@ -106,10 +115,11 @@ const BackCover = ({ page, opened, number, bookClosed }) => {
     const materials = [
       ...pageMaterials,
       new MeshStandardMaterial({
-        color: whiteColor,
+        color: redColor,
       }),
       new MeshStandardMaterial({
-        color: whiteColor,
+        color: standardColor,
+        map: BackCover,
       }),
     ];
     const mesh = new SkinnedMesh(coverGeometry, materials);

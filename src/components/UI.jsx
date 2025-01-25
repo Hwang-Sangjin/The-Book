@@ -3,6 +3,7 @@ import pageState from "../recoil/pageState";
 import bookSource from "../BookSource";
 import { useEffect, useRef, useState } from "react";
 import AudioSource from "../AudioSource";
+import openState from "../recoil/openState";
 
 const UI = () => {
   const bookSrc = bookSource;
@@ -11,6 +12,7 @@ const UI = () => {
   const [page, setPage] = useRecoilState(pageState);
   const [audioIndex, setAudioIndex] = useState(-1);
   const [audioState, setAudioState] = useState(true);
+  const [pageOpen, setPageOpen] = useRecoilState(openState);
 
   const changePage = () => {
     const temp = Math.floor(Math.random() * bookSrc.length);
@@ -19,6 +21,8 @@ const UI = () => {
     const randomIndex = Math.floor(Math.random() * audioSrc.length);
     setAudioIndex(randomIndex);
     setAudioState((prev) => !prev);
+
+    setPageOpen(true);
   };
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { Text, useHelper } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { useMemo, useRef } from "react";
+import { useRecoilState } from "recoil";
 import {
   Bone,
   BoxGeometry,
@@ -15,6 +16,7 @@ import {
   Vector3,
 } from "three";
 import { degToRad, MathUtils } from "three/src/math/MathUtils.js";
+import openState from "../../recoil/openState";
 
 const PAGE_WIDTH = 1.28;
 const PAGE_HEIGHT = 1.71; // 4:3 aspect ratio
@@ -89,6 +91,7 @@ const Page = ({
   const group = useRef();
   const turnedAt = useRef(0);
   const lastOpened = useRef(opened);
+  const [pageOpen, setPageOpen] = useRecoilState(openState);
 
   const skinnedMeshRef = useRef();
 
@@ -206,7 +209,7 @@ const Page = ({
           <Text
             anchorX="center"
             font="./Danjo-bold-Regular.otf"
-            visible={targetPage === number ? true : false}
+            visible={targetPage === number && pageOpen ? true : false}
             maxWidth={0.8}
             color={"black"}
             rotation={[0, Math.PI / 2 + (-Math.PI * 3) / 70, 0]}

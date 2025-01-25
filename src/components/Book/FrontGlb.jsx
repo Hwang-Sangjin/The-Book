@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { Helper, useGLTF, useHelper } from "@react-three/drei";
 
 const PAGE_WIDTH = 1.3;
 const PAGE_HEIGHT = 1.8; // 4:3 aspect ratio

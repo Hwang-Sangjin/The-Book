@@ -10,7 +10,6 @@ import * as THREE from "three";
 import FrontCover from "./FrontCover";
 import BackCover from "./BackCover";
 import Cover from "./Cover";
-import FrontGlb from "./FrontGlb";
 
 const Book = ({ ...props }) => {
   const [page] = useRecoilState(pageState);
@@ -64,18 +63,12 @@ const Book = ({ ...props }) => {
 
   return (
     <group scale={1.5} {...props} rotation-y={-Math.PI / 2}>
-      <FrontGlb
+      <FrontCover
         page={delayedPage}
         number={0}
         opened={page !== 0}
         bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
       />
-      {/* <FrontCover
-        page={delayedPage}
-        number={0}
-        opened={page !== 0}
-        bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
-      /> */}
       <BackCover
         page={delayedPage}
         opened={delayedPage > 98}

@@ -40,7 +40,7 @@ const Cover = ({ page, opened, number, bookClosed }) => {
       position-z={(page - number) * 0.003}
     >
       <boxGeometry args={[0.05, 1.8, 0.34]} />
-      <meshStandardMaterial color={"black"} />
+      <meshStandardMaterial color={"#74271a"} />
     </mesh>
   );
 };

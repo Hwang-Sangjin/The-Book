@@ -1,3 +1,4 @@
+import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { useMemo, useRef } from "react";
@@ -14,6 +15,8 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import frontImage from "&/front.png";
+import * as THREE from "three";
 
 const PAGE_WIDTH = 1.3;
 const PAGE_HEIGHT = 1.8; // 4:3 aspect ratio
@@ -29,19 +32,20 @@ const easingFactorFold = 0.3;
 const lerpFactor = 0.014;
 const lerpFactorOpen = 0.023;
 
-const whiteColor = new Color("black");
+const redColor = new Color("#74271a");
+const standardColor = new Color("#efcec1");
 const pageMaterials = [
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
   new MeshStandardMaterial({
     color: "#111",
   }),
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
   new MeshStandardMaterial({
-    color: whiteColor,
+    color: redColor,
   }),
 ];
 
@@ -83,6 +87,11 @@ const FrontCover = ({ page, opened, number, bookClosed }) => {
   const turnedAt = useRef(0);
   const skinnedMeshRef = useRef();
 
+  const FrontCover = useTexture(frontImage);
+  FrontCover.colorSpace = THREE.SRGBColorSpace;
+  FrontCover.minFilter = THREE.LinearFilter;
+  FrontCover.magFilter = THREE.NearestFilter;
+
   const manualSkinnedMesh = useMemo(() => {
     const bones = [];
 
@@ -105,10 +114,11 @@ const FrontCover = ({ page, opened, number, bookClosed }) => {
     const materials = [
       ...pageMaterials,
       new MeshStandardMaterial({
-        color: whiteColor,
+        color: standardColor,
+        map: FrontCover,
       }),
       new MeshStandardMaterial({
-        color: whiteColor,
+        color: redColor,
       }),
     ];
     const mesh = new SkinnedMesh(coverGeometry, materials);
