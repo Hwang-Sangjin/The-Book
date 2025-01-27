@@ -36,6 +36,15 @@ export function Loader() {
           >
             The Book!
           </button>
+          <button
+            onClick={() => {
+              setStart(false);
+            }}
+            visible={progress >= 100}
+            className="z-100 absolute top-2/3 left-1/2 pointer jersey-10-regular text-3xl text-orange-300"
+          >
+            책님!
+          </button>
           <div ref={loadingRef} className="loading-bar"></div>
         </div>
       ) : null}
