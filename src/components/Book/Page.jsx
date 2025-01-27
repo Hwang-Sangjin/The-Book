@@ -87,6 +87,7 @@ const Page = ({
   opened,
   bookClosed,
   pageTexture,
+  tarotTexture,
 }) => {
   const group = useRef();
   const turnedAt = useRef(0);
@@ -122,7 +123,7 @@ const Page = ({
       }),
       new MeshStandardMaterial({
         color: whiteColor,
-        map: pageTexture,
+        map: tarotTexture,
       }),
     ];
     const mesh = new SkinnedMesh(pageGeometry, materials);

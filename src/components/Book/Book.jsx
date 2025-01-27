@@ -10,6 +10,7 @@ import * as THREE from "three";
 import FrontCover from "./FrontCover";
 import BackCover from "./BackCover";
 import Cover from "./Cover";
+import tarotImage from "./Tarot";
 
 const Book = ({ ...props }) => {
   const [page] = useRecoilState(pageState);
@@ -20,6 +21,15 @@ const Book = ({ ...props }) => {
   pageTexture.colorSpace = THREE.SRGBColorSpace;
   pageTexture.minFilter = THREE.LinearFilter;
   pageTexture.magFilter = THREE.NearestFilter;
+
+  const tarotTexture = tarotImage.map((e) => {
+    const temp = useTexture(e);
+    temp.colorSpace = THREE.SRGBColorSpace;
+    temp.minFilter = THREE.LinearFilter;
+    temp.magFilter = THREE.NearestFilter;
+
+    return temp;
+  });
 
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -82,8 +92,10 @@ const Book = ({ ...props }) => {
         bookClosed={delayedPage === 0 || delayedPage === bookSource.length}
       />
       {answer.map((data, index) => {
+        const randomIndex = Math.floor(Math.random() * 23);
         return (
           <Page
+            tarotTexture={tarotTexture[randomIndex]}
             targetPage={page}
             key={index}
             page={delayedPage}
